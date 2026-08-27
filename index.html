@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>满载一缕星辉 Starglow · 风光摄影</title>
+  <meta name="description" content="满载一缕星辉 Starglow 的个人摄影网站 —— 以风光摄影为主，记录群山、海岸、云雾与星夜。">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body id="top">
+
+  <!-- 加载动画 -->
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <span class="preloader-name">满载一缕星辉</span>
+      <span class="preloader-en">STARGLOW — LANDSCAPE</span>
+      <span class="preloader-bar"><i></i></span>
+    </div>
+  </div>
+
+  <!-- 自定义光标 -->
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-dot"></span>
+    <span class="cursor-ring"></span>
+  </div>
+
+  <!-- 顶部导航：Photographs（悬停展开分类）+ About Me -->
+  <header class="site-head" id="site-head">
+    <a class="brand" href="index.html" data-cursor>
+      满载一缕星辉<span>STARGLOW</span>
+    </a>
+    <nav class="site-nav" aria-label="主导航">
+      <span class="nav-item" id="nav-photographs">
+        <a href="#works" class="is-active" id="nav-photographs-link" data-cursor>Photographs</a>
+        <span class="nav-sub" id="nav-sub" role="menu"></span>
+      </span>
+      <a href="about.html" data-cursor>About Me</a>
+      <button class="nav-palette" id="palette-btn" type="button" aria-label="随机切换配色" title="随机切换配色（空格键）" data-cursor>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"/>
+          <circle cx="8.8" cy="8.8" r="1.7" fill="currentColor" stroke="none"/>
+          <circle cx="15.4" cy="9.2" r="1.7" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="15" r="1.7" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 全屏首页 -->
+    <section class="hero">
+      <div class="hero-media" data-parallax="0.26">
+        <img src="assets/photos/hero.svg" alt="几何线条群山">
+      </div>
+      <div class="hero-scrim"></div>
+
+      <div class="hero-content">
+        <p class="hero-kicker">LANDSCAPE PHOTOGRAPHY</p>
+        <h1 class="hero-title" data-split>漫长的瞬间</h1>
+        <p class="hero-sub">把群山、海岸与星辰，<br>装进方寸之间。</p>
+      </div>
+
+      <span class="hero-side" aria-hidden="true">WANDER · SHOOT · SHARE</span>
+      <div class="hero-scroll" aria-hidden="true">
+        <span>SCROLL</span><i></i>
+      </div>
+    </section>
+
+    <!-- 引言 -->
+    <section class="intro">
+      <div class="container">
+        <p class="intro-text" data-split>我拍摄的从来不是风景本身，而是光落在山川、海浪与夜空上时，那一瞬间的寂静。</p>
+      </div>
+    </section>
+
+    <!-- 作品：由 config.js 按分类渲染 -->
+    <section class="works">
+      <div class="container">
+        <div class="works-head">
+          <h2 class="works-title" data-split>作品 Works</h2>
+        </div>
+      </div>
+      <div id="gallery-root"></div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="site-foot">
+    <div class="container">
+      <p class="foot-kicker">HAVE A STORY TO TELL? · 如果你也热爱山野</p>
+      <h2 class="foot-title" data-split>让我们聊聊</h2>
+      <a class="foot-mail" href="mailto:baowenze2007@foxmail.com" data-cursor>baowenze2007@foxmail.com</a>
+      <div class="foot-meta">
+        <span>© <span id="year"></span> 满载一缕星辉 Starglow</span>
+        <a href="#top" data-cursor>回到顶部 ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 灯箱 -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" type="button" aria-label="关闭">&times;</button>
+    <button class="lb-prev" type="button" aria-label="上一张">&#8592;</button>
+    <button class="lb-next" type="button" aria-label="下一张">&#8594;</button>
+    <figure class="lb-figure">
+      <img id="lb-img" src="" alt="">
+      <figcaption>
+        <span id="lb-title"></span>
+        <span id="lb-meta"></span>
+        <span id="lb-count"></span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
