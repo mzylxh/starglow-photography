@@ -11,6 +11,16 @@
   function $(sel, ctx) { return (ctx || document).querySelector(sel); }
   function $$(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
 
+  /* ---------- 图片加速：缩略图 srcset + jsDelivr CDN（国内更快），失败回退 GitHub 原图 ---------- */
+  var HOSTED = location.hostname.indexOf("github.io") !== -1;
+  var CDN = HOSTED ? "https://cdn.jsdelivr.net/gh/mzylxh/starglow-photography@master/" : "";
+  var DIRECT = HOSTED ? location.origin + location.pathname : "";
+  function url(rel) { return CDN + rel; }
+  function directUrl(rel) { return DIRECT + rel; }
+  function thumbRel(src, w) {
+    return src.replace(/^assets\/photos\//, "assets/photos/thumbs/").replace(/\.jpg$/i, "-" + w + ".jpg");
+  }
+
   /* ---------- 随机配色（仿 Coolors：空格键 / 导航按钮） ---------- */
   function hsl(h, s, l) {
     return "hsl(" + Math.round(h) + ", " + Math.round(s) + "%, " + Math.round(l) + "%)";
@@ -55,16 +65,19 @@
       var sat = 10 + Math.random() * 14;                        // 背景饱和度低，避免刺眼
       var light = dark ? 7 + Math.random() * 8 : 90 + Math.random() * 5;
       var accentH = (h + (Math.random() * 60 - 30) + 360) % 360; // 与背景相近的色相
-      var accentL = dark ? 56 + Math.random() * 16 : 38 + Math.random() * 12;
-      var satAccent = 50 + Math.random() * 12;
-      var satMuted = 22, lightMuted = dark ? 72 : 58;
+      var inkL = dark ? 90 : 16;
+      var inkDimL = dark ? 66 : 28;
+      var inkFaintL = dark ? 42 : 42;
+      var accentL = dark ? 56 + Math.random() * 16 : 26 + Math.random() * 8;
+      var satAccent = dark ? 50 + Math.random() * 12 : 55 + Math.random() * 15;
+      var satMuted = dark ? 22 : 26, lightMuted = dark ? 72 : 30;
 
       var bg = hslToRgb(h, sat, light);
       var bgSoft = hslToRgb(h, sat, dark ? light + 3 : light - 4);
       var surface = hslToRgb(h, sat, dark ? light + 6 : light - 7);
-      var ink = hslToRgb(h, 12, dark ? 90 : 16);
-      var inkDim = hslToRgb(h, 9, dark ? 66 : 42);
-      var inkFaint = hslToRgb(h, 6, dark ? 42 : 68);
+      var ink = hslToRgb(h, 12, inkL);
+      var inkDim = hslToRgb(h, 9, inkDimL);
+      var inkFaint = hslToRgb(h, 6, inkFaintL);
       var accent = hslToRgb(accentH, satAccent, accentL);
       var muted = hslToRgb((h + 24) % 360, satMuted, lightMuted);
 
@@ -85,9 +98,9 @@
         "--bg": hsl(h, sat, light),
         "--bg-soft": hsl(h, sat, dark ? light + 3 : light - 4),
         "--surface": hsl(h, sat, dark ? light + 6 : light - 7),
-        "--ink": hsl(h, 12, dark ? 90 : 16),
-        "--ink-dim": hsl(h, 9, dark ? 66 : 42),
-        "--ink-faint": hsl(h, 6, dark ? 42 : 68),
+        "--ink": hsl(h, 12, inkL),
+        "--ink-dim": hsl(h, 9, inkDimL),
+        "--ink-faint": hsl(h, 6, inkFaintL),
         "--accent": hsl(accentH, satAccent, accentL),
         "--muted": hsl((h + 24) % 360, satMuted, lightMuted),
         "--img-bg": hsl(h, sat + 4, dark ? light + 8 : light - 7),
@@ -108,8 +121,9 @@
       "--line": "rgba(232, 228, 218, .13)", "--glass": "rgba(16, 18, 22, .66)"
     };
     for (var fk in fallback) rootEl.style.setProperty(fk, fallback[fk]);
-    nextDark = false;
-    try { localStorage.setItem("ys-palette-dark", "0"); } catch (e) { /* ignore */ }
+    nextDark = !nextDark;
+    try { localStorage.setItem("ys-palette", JSON.stringify(fallback)); } catch (e) { /* ignore */ }
+    try { localStorage.setItem("ys-palette-dark", nextDark ? "1" : "0"); } catch (e) { /* ignore */ }
   }
 
   try {
@@ -290,7 +304,18 @@
   function lbShow() {
     if (!lb || !lbItems.length) return;
     var item = lbItems[lbIndex];
-    lbImg.src = item.src;
+    var rel = item.src;
+    var l800 = thumbRel(rel, 800), l1400 = thumbRel(rel, 1400);
+    lbImg.dataset.fb = "";
+    lbImg.src = url(l1400);
+    lbImg.srcset = url(l800) + " 800w, " + url(l1400) + " 1400w, " + url(rel) + " 1920w";
+    lbImg.sizes = "100vw";
+    lbImg.onerror = function () {
+      if (lbImg.dataset.fb) return;
+      lbImg.dataset.fb = "1";
+      lbImg.removeAttribute("srcset");
+      lbImg.src = directUrl(rel);
+    };
     lbImg.alt = item.title;
     lbTitle.textContent = "";
     lbMeta.textContent = item.meta || "";
@@ -361,9 +386,21 @@
       wrap.style.setProperty("--ar", img.ratio || "3/2");
       var im = document.createElement("img");
       im.className = "img";
-      im.src = img.src;
+      var rel = img.src;
+      var t800 = thumbRel(rel, 800), t1400 = thumbRel(rel, 1400);
+      im.dataset.fb = "";
+      im.src = url(t800);
+      im.srcset = url(t800) + " 800w, " + url(t1400) + " 1400w, " + url(rel) + " 1920w";
+      im.sizes = "(max-width: 800px) 92vw, 50vw";
       im.alt = img.title || "";
       im.loading = /[?&]eager=1/.test(location.search) ? "eager" : "lazy";
+      im.decoding = "async";
+      im.addEventListener("error", function () {
+        if (im.dataset.fb) return;
+        im.dataset.fb = "1";
+        im.removeAttribute("srcset");
+        im.src = directUrl(rel);
+      });
       wrap.appendChild(im);
 
       var meta = document.createElement("span");
@@ -400,8 +437,20 @@
       var coverImg = document.createElement("img");
       var coverPool = cat.images || cat.sub[Math.floor(Math.random() * cat.sub.length)].images;
       var coverSrc = coverPool[Math.floor(Math.random() * coverPool.length)].src;
-      coverImg.src = coverSrc;
+      var c800 = thumbRel(coverSrc, 800), c1400 = thumbRel(coverSrc, 1400);
+      coverImg.dataset.fb = "";
+      coverImg.src = url(c1400);
+      coverImg.srcset = url(c800) + " 800w, " + url(c1400) + " 1400w, " + url(coverSrc) + " 1920w";
+      coverImg.sizes = "100vw";
       coverImg.alt = cat.title + " 分类封面";
+      coverImg.loading = "lazy";
+      coverImg.decoding = "async";
+      coverImg.addEventListener("error", function () {
+        if (coverImg.dataset.fb) return;
+        coverImg.dataset.fb = "1";
+        coverImg.removeAttribute("srcset");
+        coverImg.src = directUrl(coverSrc);
+      });
       media.appendChild(coverImg);
 
       var scrim = document.createElement("div");

@@ -151,6 +151,40 @@ function Resize-Jpeg($src, $dst, $maxEdge, $quality) {
   }
 }
 
+function Write-Thumbs($srcFile, $thumbDir, $stem) {
+  $bmp = $null
+  try {
+    $bmp = [System.Drawing.Bitmap]::FromFile($srcFile)
+    foreach ($s in @(
+      @{ Name = '-800';  Max = 800;  Quality = 76 },
+      @{ Name = '-1400'; Max = 1400; Quality = 78 }
+    )) {
+      $scale = [double]$s.Max / [double][Math]::Max($bmp.Width, $bmp.Height)
+      if ($scale -gt 1) { $scale = 1 }
+      $nw = [Math]::Max(1, [int][Math]::Round($bmp.Width * $scale))
+      $nh = [Math]::Max(1, [int][Math]::Round($bmp.Height * $scale))
+      $nb = New-Object System.Drawing.Bitmap($nw, $nh)
+      $g = [System.Drawing.Graphics]::FromImage($nb)
+      $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+      $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
+      $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+      $g.CompositingQuality = [System.Drawing.Drawing2D.CompositingQuality]::HighQuality
+      $g.DrawImage($bmp, 0, 0, $nw, $nh)
+      $g.Dispose()
+      $codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
+      $ep = New-Object System.Drawing.Imaging.EncoderParameters(1)
+      $ep.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter([System.Drawing.Imaging.Encoder]::Quality, [long]$s.Quality)
+      $dst = Join-Path $thumbDir ($stem + $s.Name + '.jpg')
+      $nb.Save($dst, $codec, $ep)
+      $nb.Dispose()
+    }
+  } catch {
+    Write-Warning ("缩略图生成失败：{0}（{1}）" -f $srcFile, $_.Exception.Message)
+  } finally {
+    if ($bmp) { $bmp.Dispose() }
+  }
+}
+
 function Process-Dir($src, $targetRoot, $catId, $subId) {
   $target = Join-Path $targetRoot $subId
   New-Item -ItemType Directory -Force -Path $target | Out-Null
@@ -166,6 +200,9 @@ function Process-Dir($src, $targetRoot, $catId, $subId) {
     $meta = Get-MetaFromFile $f.FullName
     $ratio = Resize-Jpeg $f.FullName $dst $MaxEdge $Quality
     if (-not $ratio) { continue }
+    $thumbDir = Join-Path (Join-Path (Resolve-Path 'assets/photos').Path 'thumbs') (Join-Path $catId $subId)
+    New-Item -ItemType Directory -Force -Path $thumbDir | Out-Null
+    Write-Thumbs $dst $thumbDir ([System.IO.Path]::GetFileNameWithoutExtension($name))
     $rel = 'assets/photos/{0}/{1}{2}' -f $catId, $(if ($subId) { $subId + '/' } else { '' }), $name
     $items += [PSCustomObject]@{
       src   = $rel
