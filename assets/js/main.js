@@ -21,6 +21,64 @@
     return src.replace(/^assets\/photos\//, "assets/photos/thumbs/").replace(/\.jpg$/i, "-" + w + ".jpg");
   }
 
+  /* CDN 优先；图片进入视口后 1 秒没响应就切 GitHub 直连，直连再失败用原图兜底 */
+  var FALLBACK_MS = 1000;
+
+  function imageFallback(im, sizes) {
+    var rel = "", switched = 0, timer = null;
+
+    function clearTimer() { if (timer) { clearTimeout(timer); timer = null; } }
+    function setSource(fn) {
+      var a = fn(thumbRel(rel, 800)), b = fn(thumbRel(rel, 1400)), c = fn(rel);
+      im.sizes = sizes;
+      im.src = a;
+      im.srcset = a + " 800w, " + b + " 1400w, " + c + " 1920w";
+    }
+    function arm() {
+      if (timer || switched) return;
+      timer = setTimeout(function () {
+        timer = null;
+        if (!im.complete || !im.naturalWidth) { switched = 1; setSource(directUrl); }
+      }, FALLBACK_MS);
+    }
+
+    im.onload = clearTimer;
+    im.onerror = function () {
+      clearTimer();
+      if (switched === 0) { switched = 1; setSource(directUrl); }
+      else if (switched === 1) {
+        switched = 2;
+        im.removeAttribute("srcset");
+        im.removeAttribute("sizes");
+        im.src = directUrl(rel);
+      }
+    };
+
+    return function load(src) {
+      rel = src;
+      switched = 0;
+      clearTimer();
+      setSource(url);
+      return arm;
+    };
+  }
+
+  var armObserver = null;
+  function armOnVisible(im, arm) {
+    if (!window.IntersectionObserver) { arm(); return; }
+    if (!armObserver) {
+      armObserver = new window.IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          armObserver.unobserve(entry.target);
+          if (entry.target.__arm) entry.target.__arm();
+        });
+      }, { rootMargin: "500px 0px" });
+    }
+    im.__arm = arm;
+    armObserver.observe(im);
+  }
+
   /* ---------- 随机配色（仿 Coolors：空格键 / 导航按钮） ---------- */
   function hsl(h, s, l) {
     return "hsl(" + Math.round(h) + ", " + Math.round(s) + "%, " + Math.round(l) + "%)";
@@ -300,22 +358,12 @@
   var lbCount = $("#lb-count");
   var lbItems = [];
   var lbIndex = 0;
+  var lbLoad = lbImg ? imageFallback(lbImg, "100vw") : null;
 
   function lbShow() {
     if (!lb || !lbItems.length) return;
     var item = lbItems[lbIndex];
-    var rel = item.src;
-    var l800 = thumbRel(rel, 800), l1400 = thumbRel(rel, 1400);
-    lbImg.dataset.fb = "";
-    lbImg.src = url(l1400);
-    lbImg.srcset = url(l800) + " 800w, " + url(l1400) + " 1400w, " + url(rel) + " 1920w";
-    lbImg.sizes = "100vw";
-    lbImg.onerror = function () {
-      if (lbImg.dataset.fb) return;
-      lbImg.dataset.fb = "1";
-      lbImg.removeAttribute("srcset");
-      lbImg.src = directUrl(rel);
-    };
+    if (lbLoad) lbLoad(item.src)();
     lbImg.alt = item.title;
     lbTitle.textContent = "";
     lbMeta.textContent = item.meta || "";
@@ -386,21 +434,11 @@
       wrap.style.setProperty("--ar", img.ratio || "3/2");
       var im = document.createElement("img");
       im.className = "img";
-      var rel = img.src;
-      var t800 = thumbRel(rel, 800), t1400 = thumbRel(rel, 1400);
-      im.dataset.fb = "";
-      im.src = url(t800);
-      im.srcset = url(t800) + " 800w, " + url(t1400) + " 1400w, " + url(rel) + " 1920w";
-      im.sizes = "(max-width: 800px) 92vw, 50vw";
       im.alt = img.title || "";
-      im.loading = /[?&]eager=1/.test(location.search) ? "eager" : "lazy";
       im.decoding = "async";
-      im.addEventListener("error", function () {
-        if (im.dataset.fb) return;
-        im.dataset.fb = "1";
-        im.removeAttribute("srcset");
-        im.src = directUrl(rel);
-      });
+      var armGrid = imageFallback(im, "(max-width: 800px) 92vw, 50vw")(img.src);
+      if (/[?&]eager=1/.test(location.search)) { im.loading = "eager"; armGrid(); }
+      else { im.loading = "lazy"; armOnVisible(im, armGrid); }
       wrap.appendChild(im);
 
       var meta = document.createElement("span");
@@ -437,20 +475,10 @@
       var coverImg = document.createElement("img");
       var coverPool = cat.images || cat.sub[Math.floor(Math.random() * cat.sub.length)].images;
       var coverSrc = coverPool[Math.floor(Math.random() * coverPool.length)].src;
-      var c800 = thumbRel(coverSrc, 800), c1400 = thumbRel(coverSrc, 1400);
-      coverImg.dataset.fb = "";
-      coverImg.src = url(c1400);
-      coverImg.srcset = url(c800) + " 800w, " + url(c1400) + " 1400w, " + url(coverSrc) + " 1920w";
-      coverImg.sizes = "100vw";
       coverImg.alt = cat.title + " 分类封面";
-      coverImg.loading = "lazy";
       coverImg.decoding = "async";
-      coverImg.addEventListener("error", function () {
-        if (coverImg.dataset.fb) return;
-        coverImg.dataset.fb = "1";
-        coverImg.removeAttribute("srcset");
-        coverImg.src = directUrl(coverSrc);
-      });
+      coverImg.loading = "lazy";
+      armOnVisible(coverImg, imageFallback(coverImg, "100vw")(coverSrc));
       media.appendChild(coverImg);
 
       var scrim = document.createElement("div");
