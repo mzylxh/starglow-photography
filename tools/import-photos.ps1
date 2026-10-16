@@ -38,6 +38,7 @@ $CATS = @(
   @{ id='wuhan';      title='江城武汉'; en='Wuhan, City of Rivers';     desc='两江交汇，桥都灯火。';              src='D:\2025暑假\武汉2025.8.13-16\网站上传' },
   @{ id='xiangxi';    title='湘西秘境'; en='Hidden Xiangxi';             desc='吊脚楼影，沱江夜雨。';              src='D:\2025暑假\湘西2025.7.22-26\网站上传' },
   @{ id='chongqing';  title='山城重庆'; en='Mountain City Chongqing';   desc='轻轨穿楼，云雾绕城。';              src='D:\2025暑假\重庆2025.7.9-13\网站上传' },
+  @{ id='helanshan';  title='贺兰山下'; en='Beneath the Helan Mountains'; desc='山影苍茫，长风穿过戈壁。';          src='D:\2026秋季\贺兰山下\照片成品\网站上传' },
   @{ id='film';       title='菲林时光'; en='Film Days';                 desc=''; sub=@(
     @{ id='kodak400'; title='柯达全能400'; en='Kodak ColorPlus 400'; src='D:\胶片\柯达全能400\已调整\网站上传' },
     @{ id='kodak200'; title='柯达易拍200'; en='Kodak Easy 200';       src='D:\胶片\柯达易拍200\已调整\网站上传' },

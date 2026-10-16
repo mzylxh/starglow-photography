@@ -17,6 +17,147 @@ window.SITE = {
 window.GALLERY = [
     {
         "num":  "01",
+        "id":  "helanshan",
+        "title":  "贺兰山下",
+        "en":  "Beneath the Helan Mountains",
+        "desc":  "山影苍茫，长风穿过戈壁。",
+        "images":  [
+                       {
+                           "src":  "assets/photos/helanshan/001.jpg",
+                           "ratio":  "2/3",
+                           "title":  "DSC01690",
+                           "meta":  "f/8 · 1/500s · 45mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/002.jpg",
+                           "ratio":  "2/3",
+                           "title":  "DSC01661",
+                           "meta":  "f/8 · 1/500s · 50mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/003.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC01001",
+                           "meta":  "f/8 · 1/350s · 50mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/004.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC00955",
+                           "meta":  "f/8 · 1/350s · 16mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/005.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC00882",
+                           "meta":  "f/8 · 1/350s · 210mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/006.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC01558",
+                           "meta":  "f/8 · 1/500s · 210mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/007.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC02124",
+                           "meta":  "f/8 · 1/350s · 210mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/008.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC00668",
+                           "meta":  "f/8 · 1/250s · 28mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/009.jpg",
+                           "ratio":  "2/3",
+                           "title":  "DSC00776",
+                           "meta":  "f/11 · 1/125s · 50mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/010.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC01200",
+                           "meta":  "f/8 · 1/350s · 210mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/011.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC02189",
+                           "meta":  "f/8 · 1/4000s · 161mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/012.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC00938",
+                           "meta":  "f/11 · 1/45s · 27mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/013.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC01665",
+                           "meta":  "f/8 · 1/500s · 43mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/014.jpg",
+                           "ratio":  "1920/1279",
+                           "title":  "DSC01090",
+                           "meta":  "f/8 · 1/350s · 144mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/015.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC01671",
+                           "meta":  "f/13 · 1/200s · 16mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/016.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC01636",
+                           "meta":  "f/5.6 · 1/500s · 28mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/017.jpg",
+                           "ratio":  "2/3",
+                           "title":  "DSC01102",
+                           "meta":  "f/8 · 1/350s · 210mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/018.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC01660",
+                           "meta":  "f/8 · 1/500s · 50mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/019.jpg",
+                           "ratio":  "2/3",
+                           "title":  "DSC00813",
+                           "meta":  "f/11 · 1/350s · 193mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/020.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC00995",
+                           "meta":  "f/8 · 1/750s · 16mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/021.jpg",
+                           "ratio":  "2/3",
+                           "title":  "DSC01637",
+                           "meta":  "f/8 · 1/250s · 50mm"
+                       },
+                       {
+                           "src":  "assets/photos/helanshan/022.jpg",
+                           "ratio":  "3/2",
+                           "title":  "DSC00830",
+                           "meta":  "f/8 · 1/250s · 24mm"
+                       }
+                   ]
+    },
+    {
+        "num":  "02",
         "id":  "beijing",
         "title":  "北境来信",
         "en":  "Letters from the North",
@@ -127,7 +268,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "02",
+        "num":  "03",
         "id":  "jiangzhe",
         "title":  "江浙风韵",
         "en":  "Jiangnan Charm",
@@ -304,7 +445,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "03",
+        "num":  "04",
         "id":  "yangtze",
         "title":  "雪落长江",
         "en":  "Snow on the Yangtze",
@@ -397,7 +538,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "04",
+        "num":  "05",
         "id":  "hometown",
         "title":  "故土情深",
         "en":  "Homeland",
@@ -454,7 +595,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "05",
+        "num":  "06",
         "id":  "guizhou",
         "title":  "多彩贵州",
         "en":  "Colorful Guizhou",
@@ -541,7 +682,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "06",
+        "num":  "07",
         "id":  "nanyang",
         "title":  "南洋风语",
         "en":  "Voices of Southeast Asia",
@@ -760,7 +901,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "07",
+        "num":  "08",
         "id":  "qinggan",
         "title":  "青甘行纪",
         "en":  "Qinghai-Gansu Journey",
@@ -1147,7 +1288,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "08",
+        "num":  "09",
         "id":  "qingyuan",
         "title":  "清远山水",
         "en":  "Qingyuan Landscape",
@@ -1168,7 +1309,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "09",
+        "num":  "10",
         "id":  "shantou",
         "title":  "汕头海韵",
         "en":  "Shantou by the Sea",
@@ -1237,7 +1378,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "10",
+        "num":  "11",
         "id":  "wuhan",
         "title":  "江城武汉",
         "en":  "Wuhan, City of Rivers",
@@ -1318,7 +1459,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "11",
+        "num":  "12",
         "id":  "xiangxi",
         "title":  "湘西秘境",
         "en":  "Hidden Xiangxi",
@@ -1429,7 +1570,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "12",
+        "num":  "13",
         "id":  "chongqing",
         "title":  "山城重庆",
         "en":  "Mountain City Chongqing",
@@ -1570,7 +1711,7 @@ window.GALLERY = [
                    ]
     },
     {
-        "num":  "13",
+        "num":  "14",
         "id":  "film",
         "title":  "菲林时光",
         "en":  "Film Days",
